@@ -1,0 +1,122 @@
+.page {
+  padding: var(--space-5) var(--space-6);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.sectionCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.sectionHint {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+  line-height: 1.5;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.input, .select {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-size: 0.9375rem;
+  color: var(--color-text);
+  background: var(--color-bg);
+  font-family: inherit;
+}
+
+.input:focus, .select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(77, 159, 255, 0.15);
+}
+
+.qrPreviewRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+}
+
+.qrPreview {
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  object-fit: contain;
+  background: #fff;
+  padding: 6px;
+}
+
+.qrPlaceholder {
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 8px;
+}
+
+.saveBtn {
+  background: var(--color-primary);
+  color: #061021;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px 22px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: var(--space-3);
+}
+
+.saveBtn:hover {
+  background: var(--color-primary-dark);
+}
+
+.saveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

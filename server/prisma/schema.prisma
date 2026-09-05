@@ -1,0 +1,458 @@
+// Full application schema.
+// Phase 2 established User + RefreshToken. Phase 3 adds everything else:
+// workouts/exercises, nutrition, body metrics, habits, marketplace, and
+// notifications - with real foreign-key relations throughout.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Enums ----------
+
+enum Goal {
+  LOSE_FAT
+  GAIN_MUSCLE
+  MAINTAIN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Plan {
+  FREE
+  PRO
+  PREMIUM
+}
+
+enum ExerciseCategory {
+  CHEST
+  BACK
+  LEGS
+  SHOULDERS
+  ARMS
+  CORE
+  CARDIO
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+enum ProductCategory {
+  PROTEIN
+  CREATINE
+  MASS_GAINER
+  PRE_WORKOUT
+  SHAKER
+  GYM_BAG
+  RESISTANCE_BAND
+  DUMBBELL
+  GYM_EQUIPMENT
+}
+
+enum OrderStatus {
+  PENDING     // at least one item still needs payment/confirmation
+  CONFIRMED   // every item in the order is confirmed
+  CANCELLED
+}
+
+enum PaymentStatus {
+  AWAITING_PAYMENT // default for items sold by a real user (has a QR to pay)
+  PAYMENT_SENT     // buyer marked they paid via the seller's QR
+  CONFIRMED        // seller confirmed receipt - also the default for
+                    // catalog items with no real seller, since there's
+                    // no actual payment step to track for those
+}
+
+enum NotificationType {
+  WORKOUT_REMINDER
+  WATER_REMINDER
+  GOAL_ACHIEVED
+  GENERAL
+}
+
+// ---------- Users & Auth (Phase 2) ----------
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+
+  age    Int?
+  gender Gender?
+  height Float? // cm
+  weight Float? // kg
+  goal   Goal?  @default(MAINTAIN)
+  plan   Plan   @default(FREE)
+
+  // Sellers set this once; buyers scan it to pay directly, peer-to-peer.
+  // No payment gateway involved - this just gives the marketplace a
+  // realistic "how do I actually pay this person" flow.
+  paymentQrUrl String?
+
+  refreshTokens     RefreshToken[]
+  workouts          Workout[]
+  workoutLogs       WorkoutLog[]
+  mealLogs          MealLog[]
+  bodyMeasurements  BodyMeasurement[]
+  habitEntries      HabitEntry[]
+  stepEntries       StepEntry[]
+  waterEntries      WaterEntry[]
+  favoriteExercises FavoriteExercise[]
+  cartItems         CartItem[]
+  wishlistItems     WishlistItem[]
+  orders            Order[]
+  productReviews    ProductReview[]
+  notifications     Notification[]
+  createdProducts   Product[]
+  soldOrderItems    OrderItem[]      @relation("SoldOrderItems")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+// ---------- Workouts & Exercises ----------
+
+// The exercise library - shared across all users, not owned by one user.
+model Exercise {
+  id          String           @id @default(uuid())
+  name        String
+  category    ExerciseCategory
+  description String?
+  imageUrl    String?
+  // What it trains (e.g. "Chest, Front Delts, Triceps")
+  targetMuscles String?
+  // Ordered how-to steps, e.g. ["Set up...", "Lower...", ...]
+  steps Json?
+  // Correct form / posture cues, e.g. ["Keep back flat...", ...]
+  formTips Json?
+
+  workoutExercises  WorkoutExercise[]
+  favoritedBy       FavoriteExercise[]
+
+  createdAt DateTime @default(now())
+
+  @@map("exercises")
+}
+
+model FavoriteExercise {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, exerciseId])
+  @@map("favorite_exercises")
+}
+
+// A workout is a user-created template/plan (e.g. "Push Day").
+model Workout {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  isTemplate  Boolean @default(false)
+
+  exercises WorkoutExercise[]
+  logs      WorkoutLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("workouts")
+}
+
+// Join table: which exercises belong to a workout, with their target
+// sets/reps/weight/rest - the workout's "prescription."
+model WorkoutExercise {
+  id         String   @id @default(uuid())
+  workoutId  String
+  workout    Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  sets        Int
+  reps        Int
+  weight      Float? // kg
+  restSeconds Int?
+  notes       String?
+  order       Int     @default(0)
+
+  @@index([workoutId])
+  @@index([exerciseId])
+  @@map("workout_exercises")
+}
+
+// A single completed session of a workout - what actually got done,
+// as opposed to Workout which is the plan.
+model WorkoutLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workoutId String?
+  workout   Workout? @relation(fields: [workoutId], references: [id], onDelete: SetNull)
+
+  completedAt     DateTime @default(now())
+  durationMinutes Int?
+  caloriesBurned  Int?
+  notes           String?
+
+  @@index([userId])
+  @@index([completedAt])
+  @@map("workout_logs")
+}
+
+// ---------- Nutrition ----------
+
+model MealLog {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  mealType MealType
+  name     String
+  calories Float
+  protein  Float @default(0) // g
+  carbs    Float @default(0) // g
+  fat      Float @default(0) // g
+  fiber    Float @default(0) // g
+
+  loggedAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([loggedAt])
+  @@map("meal_logs")
+}
+
+model WaterEntry {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amountMl  Int
+  loggedAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([loggedAt])
+  @@map("water_entries")
+}
+
+// ---------- Body metrics ----------
+
+// One row per check-in: weight, and optional body-fat inputs/results.
+// BMI is derived (weight/height) rather than stored, computed at the API layer.
+model BodyMeasurement {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  weight    Float? // kg
+  bodyFatPct Float?
+  waist     Float? // cm, for US Navy formula
+  neck      Float? // cm
+  hip       Float? // cm, female only
+
+  recordedAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([recordedAt])
+  @@map("body_measurements")
+}
+
+// ---------- Habits ----------
+
+// One row per user per day per habit type, so streaks are just a
+// consecutive-date count query.
+model HabitEntry {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  habitType String // "WORKOUT" | "WATER" | "SLEEP" | "STRETCHING" | "MEDITATION"
+  date      DateTime @db.Date
+  completed Boolean  @default(true)
+
+  @@unique([userId, habitType, date])
+  @@index([userId, date])
+  @@map("habit_entries")
+}
+
+model StepEntry {
+  id       String   @id @default(uuid())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  steps    Int
+  date     DateTime @db.Date
+
+  @@unique([userId, date])
+  @@index([userId, date])
+  @@map("step_entries")
+}
+
+// ---------- Marketplace ----------
+
+model Product {
+  id          String          @id @default(uuid())
+  name        String
+  description String
+  category    ProductCategory
+  price       Float
+  imageUrl    String?
+  stock       Int             @default(0)
+  rating      Float           @default(0)
+
+  // Nullable: the 12 seeded catalog products have no human creator.
+  // User-added listings (Phase 8's "+ Add Product") set this, which is
+  // what lets the FREE-tier listing cap count "products this user added."
+  createdByUserId String?
+  createdBy       User?   @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  // Seller-provided payment details for peer-to-peer checkout (Phase 11.5).
+  // Either/both can be set: if sellerQrImageUrl is set it's shown directly;
+  // otherwise if sellerUpiId is set, a QR is generated on the fly from it.
+  sellerUpiId     String?
+  sellerQrImageUrl String?
+
+  // Seller contact for user listings: shown under "Seller details" on the
+  // product page so buyers can reach out directly (WhatsApp + Indian state).
+  sellerWhatsapp String?
+  sellerState    String?
+
+  cartItems     CartItem[]
+  wishlistItems WishlistItem[]
+  orderItems    OrderItem[]
+  reviews       ProductReview[]
+
+  createdAt DateTime @default(now())
+
+  @@map("products")
+}
+
+model ProductReview {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rating  Int
+  comment String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([productId, userId])
+  @@map("product_reviews")
+}
+
+model CartItem {
+  id        String  @id @default(uuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int     @default(1)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@map("cart_items")
+}
+
+model WishlistItem {
+  id        String  @id @default(uuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@map("wishlist_items")
+}
+
+model Order {
+  id     String      @id @default(uuid())
+  userId String
+  user   User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status OrderStatus @default(PENDING)
+  total  Float
+
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  quantity        Int
+  priceAtPurchase Float
+
+  // Snapshot of who was selling this at purchase time (null for catalog
+  // items with no real seller) - snapshotting means a seller changing
+  // their QR later, or deleting their account, never rewrites history.
+  // onDelete: SetNull keeps the order line item intact even if the
+  // seller's account is later deleted - only the live link breaks.
+  sellerId      String?
+  seller        User?         @relation("SoldOrderItems", fields: [sellerId], references: [id], onDelete: SetNull)
+  paymentStatus PaymentStatus @default(AWAITING_PAYMENT)
+
+  @@index([orderId])
+  @@index([sellerId])
+  @@map("order_items")
+}
+
+// ---------- Notifications ----------
+
+model Notification {
+  id     String           @id @default(uuid())
+  userId String
+  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type   NotificationType
+  message String
+  isRead Boolean          @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("notifications")
+}

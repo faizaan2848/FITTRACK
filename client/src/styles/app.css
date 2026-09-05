@@ -1,0 +1,157 @@
+/* In-app polish — scoped under .app-shell so the landing page is untouched.
+   Landing renders outside AppLayout and never matches these selectors.
+   Covers typography hierarchy, buttons, inputs, cards, tables, tabs. */
+
+.app-shell {
+  font-family: var(--font-body);
+  letter-spacing: var(--tracking-normal);
+}
+
+/* --- Headings hierarchy (in-app only) --- */
+.app-shell h1 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+.app-shell h2 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.3;
+}
+
+.app-shell h3,
+.app-shell h4 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.app-shell p {
+  line-height: var(--leading-relaxed);
+}
+
+/* --- Numeric readouts: mono + tabular figures --- */
+.app-shell [class*="statValue"],
+.app-shell [class*="stat-value"],
+.app-shell [class*="metricValue"],
+.app-shell [class*="amount"],
+.app-shell [class*="price"] {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+/* --- Buttons (in-app) --- */
+.app-shell button {
+  letter-spacing: 0.01em;
+}
+
+.app-shell button:active {
+  transform: translateY(1px);
+}
+
+.app-shell button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* --- Inputs / selects / textareas (in-app) --- */
+.app-shell input,
+.app-shell select,
+.app-shell textarea {
+  font-family: var(--font-body);
+  letter-spacing: var(--tracking-normal);
+  background: var(--color-surface);
+  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.app-shell input::placeholder,
+.app-shell textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.75;
+}
+
+.app-shell input:focus,
+.app-shell select:focus,
+.app-shell textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+  background: var(--color-surface-raised);
+}
+
+/* Number inputs: mono tabular */
+.app-shell input[type="number"] {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Links in-app --- */
+.app-shell a {
+  text-underline-offset: 3px;
+}
+
+/* --- Muted helper / meta text --- */
+.app-shell [class*="Meta"],
+.app-shell [class*="Sublabel"],
+.app-shell [class*="muted"],
+.app-shell [class*="Hint"] {
+  line-height: var(--leading-normal);
+}
+
+/* --- Eyebrow / badge labels --- */
+.app-shell [class*="Badge"],
+.app-shell [class*="badge"] {
+  letter-spacing: var(--tracking-wide);
+}
+
+/* --- Tables / history rows: tabular numbers, better row rhythm --- */
+.app-shell table {
+  font-variant-numeric: tabular-nums;
+}
+
+.app-shell [class*="historyRow"],
+.app-shell [class*="tableRow"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Card hover lift (subtle, in-app grids) --- */
+.app-shell [class*="productCard"],
+.app-shell [class*="statCard"],
+.app-shell [class*="chartCard"] {
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+/* --- Empty states: softer, centered rhythm --- */
+.app-shell [class*="emptyState"] {
+  line-height: var(--leading-relaxed);
+}
+
+/* --- Error banners: consistent type --- */
+.app-shell [class*="errorBanner"] {
+  font-size: 0.875rem;
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-normal);
+}
+
+/* --- Mobile: keep in-app type comfortable --- */
+@media (max-width: 768px) {
+  .app-shell h1 {
+    letter-spacing: -0.015em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell *,
+  .app-shell *::before,
+  .app-shell *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

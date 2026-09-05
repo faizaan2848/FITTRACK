@@ -1,0 +1,61 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.svg {
+  width: 220px;
+  height: 220px;
+  flex-shrink: 0;
+}
+
+.ring {
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.readouts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.readout {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.readoutLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  width: 64px;
+}
+
+.readoutValue {
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.readoutGoal {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 640px) {
+  .wrapper {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+}

@@ -1,0 +1,133 @@
+.page {
+  padding: var(--space-5) var(--space-6);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.pageSubtitle {
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  margin-bottom: var(--space-5);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-4);
+}
+
+.planCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.planCardCurrent {
+  border-color: var(--color-primary);
+  box-shadow: var(--glow-primary);
+}
+
+.currentBadge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: var(--color-primary);
+  color: #061021;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.planName {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.planPrice {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: var(--space-3) 0;
+}
+
+.planPriceUnit {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.featureList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-4);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.featureList li {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.featureCheck {
+  color: var(--color-primary);
+}
+
+.upgradeBtn {
+  background: var(--color-primary);
+  color: #061021;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.upgradeBtn:hover {
+  background: var(--color-primary-dark);
+}
+
+.currentBtn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  padding: 11px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: default;
+}
+
+.usageNote {
+  margin-top: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}

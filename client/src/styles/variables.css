@@ -1,0 +1,61 @@
+/* Design tokens for the whole app.
+   Palette, spacing, and radii are finalized visually in Phase 4 (Dashboard)
+   once we lock the design plan, but the accent direction from the brief
+   (blue or emerald, clean/minimal, soft shadows, rounded cards) lives here
+   as the single source of truth so no component hardcodes a color. */
+
+:root {
+  /* Dark navy theme with a glowing signal-blue accent. */
+  --color-primary: #4d9fff;
+  --color-primary-dark: #2f7fe0;
+  --color-secondary: #00c2d1;
+  --color-secondary-dark: #00a3b0;
+
+  --color-bg: #0a0f1c;
+  --color-surface: #0f1729;
+  --color-surface-raised: #131c33;
+  --color-text: #f1f5fb;
+  --color-text-muted: #93a0b8;
+  --color-border: rgba(255, 255, 255, 0.09);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --glow-primary: 0 0 32px rgba(77, 159, 255, 0.35);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+
+  --font-display: "Anton", "Space Grotesk", sans-serif;
+  --font-heading: "Space Grotesk", "Inter", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "Courier New", monospace;
+
+  /* In-app typography scale (additive — landing keeps its own sizes).
+     Use these in protected pages for consistent hierarchy. */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: -0.011em;
+  --tracking-wide: 0.04em;
+  --tracking-eyebrow: 0.08em;
+
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  /* In-app elevation + focus (additive — existing shadows untouched). */
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+  --focus-ring: 0 0 0 3px rgba(77, 159, 255, 0.35);
+  --overlay-scrim: rgba(4, 8, 18, 0.7);
+}
