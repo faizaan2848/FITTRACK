@@ -46,7 +46,7 @@ export const logout = asyncHandler(async (req, res) => {
   const incomingToken = req.cookies?.[REFRESH_COOKIE_NAME];
   await revokeRefreshToken(incomingToken);
 
-  res.clearCookie(REFRESH_COOKIE_NAME, { path: "/api/auth" });
+  res.clearCookie(REFRESH_COOKIE_NAME, { ...refreshCookieOptions, maxAge: 0 });
   res.status(200).json({ message: "Logged out" });
 });
 

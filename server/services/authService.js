@@ -114,8 +114,8 @@ export const REFRESH_COOKIE_NAME = "refreshToken";
 
 export const refreshCookieOptions = {
   httpOnly: true,
-  secure: env.NODE_ENV === "production",
-  sameSite: "lax",
+  secure: env.COOKIE_SECURE,
+  sameSite: env.COOKIE_SAME_SITE,
   maxAge: REFRESH_TOKEN_TTL_MS,
   path: "/api/auth",
 };

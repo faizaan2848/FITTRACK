@@ -27,4 +27,13 @@ export const env = {
   // Phase 9: base URL of the existing Python AI nutrition service.
   // Express calls this; the React client never talks to Python directly.
   PYTHON_AI_SERVICE_URL: process.env.PYTHON_AI_SERVICE_URL || "http://localhost:8000",
+
+  // Auth cookie mode. In production the frontend (Vercel) and API (Render)
+  // live on different sites, and browsers only send cross-site cookies with
+  // SameSite=None + Secure (HTTPS) — which both hosts provide. Local dev
+  // stays on Lax so plain-http localhost keeps working.
+  COOKIE_SAME_SITE: process.env.COOKIE_SAME_SITE || (process.env.NODE_ENV === "production" ? "none" : "lax"),
+  COOKIE_SECURE: process.env.COOKIE_SECURE
+    ? process.env.COOKIE_SECURE === "true"
+    : process.env.NODE_ENV === "production",
 };
