@@ -6,6 +6,7 @@ import {
   addWaterRequest,
 } from "../../services/nutritionService";
 import MealSection from "../../components/nutrition/MealSection";
+import GymLoader from "../../components/common/GymLoader";
 import styles from "./nutrition.module.css";
 
 const WATER_GOAL_ML = 2500;
@@ -65,7 +66,7 @@ function NutritionTracker() {
   if (isLoading || !day) {
     return (
       <div className={styles.page}>
-        {error ? <div className={styles.errorBanner}>{error}</div> : "Loading..."}
+        {error ? <div className={styles.errorBanner}>{error}</div> : <GymLoader label="Loading nutrition..." />}
       </div>
     );
   }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getExercisesRequest, toggleFavoriteRequest } from "../../services/exerciseService";
+import GymLoader from "../../components/common/GymLoader";
 import styles from "./workouts.module.css";
 
 const CATEGORIES = ["ALL", "CHEST", "BACK", "LEGS", "SHOULDERS", "ARMS", "CORE", "CARDIO"];
@@ -66,7 +67,7 @@ function ExerciseLibrary() {
       {error && <div className={styles.errorBanner}>{error}</div>}
 
       {isLoading ? (
-        <div className={styles.emptyState}>Loading exercises...</div>
+        <GymLoader label="Loading exercises..." />
       ) : exercises.length === 0 ? (
         <div className={styles.emptyState}>No exercises found in this category.</div>
       ) : (

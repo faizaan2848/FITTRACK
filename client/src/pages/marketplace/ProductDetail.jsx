@@ -5,6 +5,7 @@ import { addToCartRequest } from "../../services/cartService";
 import { toggleWishlistRequest } from "../../services/wishlistService";
 import { useCart } from "../../context/CartContext";
 import { formatINR } from "../../utils/currency";
+import GymLoader from "../../components/common/GymLoader";
 import styles from "./marketplace.module.css";
 
 const CATEGORY_ICONS = {
@@ -58,7 +59,7 @@ function ProductDetail() {
   }
 
   if (!product) {
-    return <div className={styles.page}>Loading...</div>;
+    return <div className={styles.page}><GymLoader label="Loading product..." /></div>;
   }
 
   const soldOut = (product.stock ?? 0) <= 0;

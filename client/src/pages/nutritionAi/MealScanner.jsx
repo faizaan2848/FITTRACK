@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { analyzeMealPhotoRequest } from "../../services/nutritionAiService";
 import { addMealRequest } from "../../services/nutritionService";
-import { getMealTypeForTime, MEAL_TYPE_LABELS } from "../../utils/mealTiming";
+import { getMealTypeForTime, MEAL_TYPE_LABELS, MEAL_SLOT_HINT } from "../../utils/mealTiming";
 import { useMembership } from "../../context/MembershipContext";
 import UpgradeGate from "../../components/common/UpgradeGate";
 import MacroPlate from "../../components/nutritionAi/MacroPlate";
@@ -22,6 +22,7 @@ function MealScanner() {
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
   const [loggedMeal, setLoggedMeal] = useState(null); // { mealType, calories } | "error" | null
+  const [slotOverride, setSlotOverride] = useState("AUTO"); // AUTO | BREAKFAST | LUNCH | DINNER | SNACK
   const inputRef = useRef(null);
 
   const handleFile = useCallback((selected) => {
@@ -49,10 +50,11 @@ function MealScanner() {
       setResult(data);
       setStatus("done");
 
-      // Auto-file this into today's nutrition log based on the current
-      // time of day - this is a separate try/catch from the analysis
-      // itself, so if saving fails the user still sees their scan results.
-      const mealType = getMealTypeForTime();
+      // Auto-file this into today's nutrition log. By default the slot
+      // comes from the time of day; the "Log as" picker lets the user
+      // override it (e.g. late dinner scanned at 10:30pm). Saving is a
+      // separate try/catch so a save failure never hides scan results.
+      const mealType = slotOverride === "AUTO" ? getMealTypeForTime() : slotOverride;
       try {
         await addMealRequest({
           mealType,
@@ -118,6 +120,21 @@ function MealScanner() {
         <div className={styles.previewRow}>
           <img src={previewUrl} alt="Uploaded meal" className={styles.previewImg} />
           <div className={styles.previewActions}>
+            <label className={styles.slotRow}>
+              <span className={styles.slotLabel}>Log as</span>
+              <select
+                className={styles.slotSelect}
+                value={slotOverride}
+                onChange={(e) => setSlotOverride(e.target.value)}
+                disabled={status === "loading"}
+              >
+                <option value="AUTO">Auto ({MEAL_TYPE_LABELS[getMealTypeForTime()]})</option>
+                <option value="BREAKFAST">Breakfast</option>
+                <option value="LUNCH">Lunch</option>
+                <option value="DINNER">Dinner</option>
+                <option value="SNACK">Snack</option>
+              </select>
+            </label>
             <button className={styles.primaryBtn} onClick={analyze} disabled={status === "loading"}>
               {status === "loading" ? "Reading the plate..." : "Analyze meal"}
             </button>
@@ -125,6 +142,7 @@ function MealScanner() {
               Choose a different photo
             </button>
           </div>
+          <p className={styles.slotHint}>{MEAL_SLOT_HINT}</p>
         </div>
       )}
 

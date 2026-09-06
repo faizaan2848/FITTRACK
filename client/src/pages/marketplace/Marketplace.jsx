@@ -6,6 +6,7 @@ import { getWishlistRequest, toggleWishlistRequest } from "../../services/wishli
 import { useCart } from "../../context/CartContext";
 import { useToast } from "../../context/ToastContext";
 import ProductCard from "../../components/marketplace/ProductCard";
+import GymLoader from "../../components/common/GymLoader";
 import styles from "./marketplace.module.css";
 
 const CATEGORIES = [
@@ -109,7 +110,7 @@ function Marketplace() {
       </div>
 
       {isLoading ? (
-        <div className={styles.emptyState}>Loading products...</div>
+        <GymLoader label="Loading products..." />
       ) : products.length === 0 ? (
         <div className={styles.emptyState}>No products found.</div>
       ) : (

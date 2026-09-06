@@ -146,7 +146,7 @@
 
 .chartGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   gap: var(--space-3);
 }
 
@@ -156,6 +156,8 @@
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   padding: var(--space-4);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .chartCardTitle {
@@ -180,4 +182,23 @@
   justify-content: center;
   min-height: 60vh;
   color: var(--color-text-muted);
+}
+
+/* Mobile: single-column charts, tighter page padding so graphs fit. */
+@media (max-width: 640px) {
+  .content {
+    padding: var(--space-4) var(--space-3) var(--space-5);
+  }
+
+  .topbar {
+    padding: var(--space-3) var(--space-3);
+  }
+
+  .chartGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .chartCard {
+    padding: var(--space-3);
+  }
 }

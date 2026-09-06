@@ -6,6 +6,7 @@ import WeeklyCaloriesChart from "../../components/dashboard/WeeklyCaloriesChart"
 import WeightTrendChart from "../../components/dashboard/WeightTrendChart";
 import NutritionSummaryChart from "../../components/dashboard/NutritionSummaryChart";
 import AchievementsWidget from "../../components/dashboard/AchievementsWidget";
+import GymLoader from "../../components/common/GymLoader";
 import styles from "../../components/dashboard/dashboard.module.css";
 
 function Dashboard() {
@@ -41,7 +42,7 @@ function Dashboard() {
   if (isLoading) {
     return (
       <div className={styles.page}>
-        <div className={styles.loadingState}>Loading your dashboard...</div>
+        <GymLoader label="Loading your dashboard..." />
       </div>
     );
   }
@@ -49,7 +50,7 @@ function Dashboard() {
   if (error) {
     return (
       <div className={styles.page}>
-        <div className={styles.loadingState}>{error}</div>
+        <div className={styles.emptyState} style={{ color: "#f87171" }}>{error}</div>
       </div>
     );
   }

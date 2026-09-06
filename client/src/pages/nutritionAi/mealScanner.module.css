@@ -61,6 +61,43 @@
 .previewActions {
   display: flex;
   gap: var(--space-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.slotRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slotLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.slotSelect {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 11px 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.slotSelect:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.slotHint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 8px;
 }
 
 .primaryBtn {
