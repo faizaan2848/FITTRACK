@@ -32,6 +32,7 @@ function Login() {
   return (
     <div className={styles.page}>
       <div className={styles.card}>
+        <img src="/logo.svg" alt="FitTrack logo" className={styles.logoMark} />
         <div className={styles.brand}>FitTrack</div>
         <p className={styles.subtitle}>Log in to keep tracking your progress.</p>
 

@@ -59,7 +59,15 @@ function LandingPage() {
     <div className={styles.page}>
       <nav className={styles.nav}>
         <div className={styles.brandGroup}>
-          <div className={styles.brandMark}>F</div>
+          <div className={styles.brandMark}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="2" y="11" width="20" height="2.6" rx="1.3" fill="#061021" />
+              <rect x="4.5" y="7" width="3" height="10" rx="1.5" fill="#061021" />
+              <rect x="16.5" y="7" width="3" height="10" rx="1.5" fill="#061021" />
+              <rect x="8.6" y="9" width="1.8" height="6" rx="0.9" fill="#061021" opacity="0.65" />
+              <rect x="13.6" y="9" width="1.8" height="6" rx="0.9" fill="#061021" opacity="0.65" />
+            </svg>
+          </div>
           <div className={styles.brand}>FITTRACK</div>
         </div>
         <div className={styles.navActions}>

@@ -38,6 +38,7 @@ function Register() {
   return (
     <div className={styles.page}>
       <div className={styles.card}>
+        <img src="/logo.svg" alt="FitTrack logo" className={styles.logoMark} />
         <div className={styles.brand}>FitTrack</div>
         <p className={styles.subtitle}>Create an account to start tracking.</p>
 

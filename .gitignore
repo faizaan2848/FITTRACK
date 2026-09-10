@@ -49,6 +49,16 @@ client/public/uploads/
 .cache/
 *.tsbuildinfo
 
+# Python (AI meal service)
+venv/
+__pycache__/
+*.pyc
+ai-service/.env
+AI MEAL SCANNER BACKEND/.env
+
+# Local zips / bundles — don't commit these
+*.zip
+
 # Editor
 .vscode/
 .idea/

@@ -43,7 +43,10 @@ function AppLayout() {
     <div className={`${styles.shell} app-shell`}>
       <aside className={styles.sidebar}>
         <div className={styles.brandRow}>
-          <div className={styles.brand}>FitTrack</div>
+          <div className={styles.brandGroup}>
+            <img src="/logo.svg" alt="FitTrack logo" className={styles.brandMark} />
+            <div className={styles.brand}>FitTrack</div>
+          </div>
           <NotificationBell />
         </div>
 

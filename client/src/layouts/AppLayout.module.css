@@ -40,6 +40,19 @@
   text-transform: uppercase;
 }
 
+.brandGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brandMark {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 16px rgba(77, 159, 255, 0.25);
+}
+
 .nav {
   display: flex;
   flex-direction: column;
