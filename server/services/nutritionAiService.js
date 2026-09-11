@@ -11,8 +11,12 @@ export async function analyzeMealPhoto({ buffer, mimetype, originalname }) {
   formData.append("file", blob, originalname || "meal.jpg");
 
   let response;
+  // Strip trailing slashes: a PYTHON_AI_SERVICE_URL like
+  // "https://x.onrender.com/" would otherwise build "...com//api/analyze",
+  // which FastAPI answers with 404 {"detail": "Not Found"}.
+  const baseUrl = env.PYTHON_AI_SERVICE_URL.replace(/\/+$/, "");
   try {
-    response = await fetch(`${env.PYTHON_AI_SERVICE_URL}/api/analyze`, {
+    response = await fetch(`${baseUrl}/api/analyze`, {
       method: "POST",
       body: formData,
     });
