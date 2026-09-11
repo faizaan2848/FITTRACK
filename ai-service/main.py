@@ -26,7 +26,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-MODEL_NAME = "gemini-2.5-flash"
+# Env-overridable so future model bumps need no code change
+# (e.g. GEMINI_MODEL=gemini-2.5-flash to roll back).
+MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 
 # Ask Gemini to reply in strict JSON so the frontend never has to parse
 # free-form text. This is the main upgrade over the original script.
